@@ -10,18 +10,18 @@ static var _cache: Dictionary = {}
 
 
 static func title() -> Font:
-	return _get(TITLE_PATH)
+	return _font_at(TITLE_PATH)
 
 
 static func display() -> Font:
-	return _get(DISPLAY_PATH)
+	return _font_at(DISPLAY_PATH)
 
 
 static func body() -> Font:
-	return _get(BODY_PATH)
+	return _font_at(BODY_PATH)
 
 
-static func _get(path: String) -> Font:
+static func _font_at(path: String) -> Font:
 	if _cache.has(path):
 		return _cache[path]
 	var font: Font = null

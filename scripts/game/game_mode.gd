@@ -59,9 +59,9 @@ func intensity_at(elapsed: float) -> float:
 
 ## Rank letter for a finished run.
 func rank_for(score: int) -> String:
-	var thresholds: Array[int] = [30000, 20000, 12000, 6000, 2500]
+	var thresholds: Array[int] = [55000, 35000, 20000, 10000, 4000]
 	if id == "survival":
-		thresholds = [60000, 35000, 18000, 8000, 3000]
+		thresholds = [80000, 45000, 22000, 10000, 4000]
 	var letters: Array[String] = ["S", "A", "B", "C", "D"]
 	for i in thresholds.size():
 		if score >= thresholds[i]:

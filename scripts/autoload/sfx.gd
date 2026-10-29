@@ -56,6 +56,21 @@ func _ready() -> void:
 	add_child(_music)
 
 
+func _exit_tree() -> void:
+	# Release audio streams so nothing is reported as leaked on quit.
+	if _music_tween:
+		_music_tween.kill()
+	_music.stop()
+	_music.stream = null
+	for p in _pool_3d:
+		p.stop()
+		p.stream = null
+	for p in _pool_2d:
+		p.stop()
+		p.stream = null
+	_streams.clear()
+
+
 func _setup_buses() -> void:
 	if AudioServer.get_bus_index(&"SFX") == -1:
 		AudioServer.add_bus()

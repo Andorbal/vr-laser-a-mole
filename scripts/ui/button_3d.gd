@@ -17,7 +17,7 @@ var _press := 0.0
 func _init(text: String, sub_text: String, p_size: Vector2, p_color: Color, font_size := 72) -> void:
 	size = p_size
 	color = p_color
-	_panel = Mat.add_mesh(self, Mat.quad(p_size), Mat.shader_material("res://shaders/panel.gdshader"))
+	_panel = Mat.add_mesh(self, Mat.quad(p_size), Mat.shader_material("res://shaders/panel.gdshader", {"fill_alpha": 0.88}))
 	_panel.set_instance_shader_parameter("panel_color", p_color)
 	_panel.set_instance_shader_parameter("panel_size", p_size)
 	label = GameFonts.make_label(text, font_size, GameFonts.display())
@@ -26,7 +26,7 @@ func _init(text: String, sub_text: String, p_size: Vector2, p_color: Color, font
 	label.outline_render_priority = 1
 	label.width = p_size.x / label.pixel_size
 	add_child(label)
-	sub_label = GameFonts.make_label(sub_text, int(font_size * 0.55), GameFonts.body(), p_color.lightened(0.45))
+	sub_label = GameFonts.make_label(sub_text, int(font_size * 0.58), GameFonts.body(), p_color.lightened(0.45))
 	sub_label.position = Vector3(0.0, -p_size.y * 0.24, 0.004)
 	sub_label.render_priority = 2
 	sub_label.outline_render_priority = 1

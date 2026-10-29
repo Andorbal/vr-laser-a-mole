@@ -11,8 +11,9 @@ signal released(bot: Bot) ## Back in the hatch; free for reuse.
 enum State { IDLE, PRE, RISING, UP, RETREAT, DYING }
 
 const HIDE_Z := 0.5
-const UP_Z := -0.36
-const HIT_RADIUS := 0.4
+const UP_Z := -0.52
+const HIT_RADIUS := 0.45
+const BOT_SCALE := 1.15 ## Visual size multiplier for the model.
 const RISE_TIME := 0.2
 const RETREAT_TIME := 0.2
 const DIE_TIME := 0.55
@@ -213,7 +214,7 @@ func _apply_pose() -> void:
 	var t := _t + _phase
 	if state == State.DYING:
 		model.head.rotation = Vector3(0.0, 0.0, _spin * _t)
-		model.scale = Vector3.ONE * (1.0 + _flash * 0.15)
+		model.scale = Vector3.ONE * BOT_SCALE * (1.0 + _flash * 0.15)
 	else:
 		var wobble := 0.12
 		if state == State.UP and time_left < TAUNT_TIME:
@@ -222,7 +223,7 @@ func _apply_pose() -> void:
 		var stretch := 0.0
 		if state == State.RISING:
 			stretch = (1.0 - clampf(_t / RISE_TIME, 0.0, 1.0)) * 0.18
-		model.scale = Vector3(1.0 - stretch * 0.5, 1.0 - stretch * 0.5, 1.0 + stretch) * (1.0 + _flash * 0.12)
+		model.scale = Vector3(1.0 - stretch * 0.5, 1.0 - stretch * 0.5, 1.0 + stretch) * BOT_SCALE * (1.0 + _flash * 0.12)
 	_update_face()
 
 

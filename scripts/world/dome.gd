@@ -10,7 +10,7 @@ const ROW_COUNTS: Array[int] = [11, 11, 9, 6]
 const ROW_OFFSETS: Array[float] = [0.0, 0.5, 0.25, 0.0]
 const MOUTH_RADIUS := 0.38
 const TUBE_LENGTH := 1.3
-const FLANGE_RADIUS := 0.62
+const FLANGE_RADIUS := 0.54
 const STRUT_RADIUS := 0.045
 const BASE_RADIUS := 5.35
 const SHIELD_RADIUS := 6.7
@@ -139,12 +139,12 @@ func _update_hatch(h: Hatch, delta: float) -> void:
 		h.color = h.color.lerp(Palette.CYAN, minf(delta * 3.0, 1.0))
 
 	var lin := h.color.srgb_to_linear()
-	var energy := lerpf(0.05, 0.32, h.power_level) + h.glow * 0.7 + boost * 0.3 * h.power_level
+	var energy := lerpf(0.03, 0.11, h.power_level) + h.glow * 0.75 + boost * 0.25 * h.power_level
 	var i := h.index
 	_rim_mm.set_instance_color(i, Color(lin.r, lin.g, lin.b, energy))
 	_rim_mm.set_instance_custom_data(i, Color(h.telegraph, h.flash, h.taunt, 0.0))
 	_iris_mm.set_instance_color(i, Color(lin.r, lin.g, lin.b, 1.0))
-	_iris_mm.set_instance_custom_data(i, Color(h.open, h.power_level * 0.5 + h.glow, 0.0, 0.0))
+	_iris_mm.set_instance_custom_data(i, Color(h.open, h.power_level * 0.12 + h.glow, 0.0, 0.0))
 	_tube_mm.set_instance_color(i, Color(lin.r, lin.g, lin.b, 1.0))
 	_tube_mm.set_instance_custom_data(i, Color(h.glow * 0.7 + h.open * 0.5, 0.0, 0.0, 0.0))
 
@@ -209,7 +209,7 @@ func _build_hatch_meshes() -> void:
 	tube_mesh.cap_bottom = false
 	_tube_mm = _make_mm(tube_mesh, Mat.shader_material("res://shaders/hatch_tube.gdshader"), true)
 
-	var rim_mesh := Mat.torus(MOUTH_RADIUS - 0.02, MOUTH_RADIUS + 0.085, 40, 10)
+	var rim_mesh := Mat.torus(MOUTH_RADIUS - 0.02, MOUTH_RADIUS + 0.065, 40, 10)
 	_rim_mm = _make_mm(rim_mesh, Mat.shader_material("res://shaders/hatch_rim.gdshader"), true)
 
 	var iris_mesh := Mat.quad(Vector2(MOUTH_RADIUS * 2.0, MOUTH_RADIUS * 2.0))

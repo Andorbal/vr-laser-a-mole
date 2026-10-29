@@ -11,7 +11,9 @@ signal menu_requested
 signal resume_requested
 
 const BUTTON_DIST := 2.5
-const SIDE_ANGLE := 0.98
+const SIDE_ANGLE := 0.9
+const SIDE_DIST := 2.15
+const PANEL_ALPHA := 0.88
 
 var _modes: Array[GameMode] = []
 var _main: Node3D
@@ -84,22 +86,24 @@ func _button(parent: Node3D, text: String, sub_text: String, size: Vector2, colo
 func _build_main() -> void:
 	# Title.
 	var title_root := Node3D.new()
-	_face_player(title_root, Vector3(0.0, 2.42, -3.4))
+	_face_player(title_root, Vector3(0.0, 2.28, -3.0))
 	_main.add_child(title_root)
-	_title = _label(title_root, "LASER-A-MOLE", 210, GameFonts.title(), Color(1.0, 0.86, 0.97), Vector3.ZERO)
+	var marquee := _panel(title_root, Vector2(2.75, 0.7), Palette.MAGENTA, 0.9)
+	marquee.position = Vector3(0.0, -0.08, -0.01)
+	_title = _label(title_root, "LASER-A-MOLE", 240, GameFonts.title(), Color(1.0, 0.86, 0.97), Vector3(0.0, 0.03, 0.0))
 	_title.outline_size = 42
 	_title.outline_modulate = Color(1.0, 0.1, 0.7, 0.75)
-	var underline := Mat.add_mesh(title_root, Mat.box(Vector3(2.3, 0.014, 0.014)), Mat.neon(Palette.CYAN, 3.0), Vector3(0.0, -0.17, 0.0))
+	var underline := Mat.add_mesh(title_root, Mat.box(Vector3(2.4, 0.014, 0.014)), Mat.neon(Palette.CYAN, 3.0), Vector3(0.0, -0.15, 0.0))
 	underline.name = "Underline"
-	var tag := _label(title_root, "POINT.  SHOOT.  WHACK.", 64, GameFonts.display(), Palette.CYAN, Vector3(0.0, -0.3, 0.0))
+	var tag := _label(title_root, "POINT.  SHOOT.  WHACK.", 70, GameFonts.display(), Palette.CYAN, Vector3(0.0, -0.29, 0.0))
 	tag.outline_size = 10
 	tag.outline_modulate = Color(0.0, 0.2, 0.4, 0.8)
 
 	# Mode buttons.
-	var xs: Array[float] = [-0.76, 0.0, 0.76]
+	var xs: Array[float] = [-0.8, 0.0, 0.8]
 	for i in _modes.size():
 		var m := _modes[i]
-		var b := _button(_main, m.title, "", Vector2(0.68, 0.44), m.color, Vector3(xs[i], 1.4, -BUTTON_DIST), 76)
+		var b := _button(_main, m.title, "", Vector2(0.72, 0.46), m.color, Vector3(xs[i], 1.42, -BUTTON_DIST), 84)
 		b.label.position.y = 0.09
 		b.sub_label.position.y = -0.07
 		b.pressed.connect(func(_b: Button3D) -> void: mode_chosen.emit(m))
@@ -118,43 +122,43 @@ func _build_main() -> void:
 
 func _build_bestiary() -> void:
 	var root := Node3D.new()
-	_face_player(root, _polar(-SIDE_ANGLE, 2.6, 1.45))
+	_face_player(root, _polar(-SIDE_ANGLE, SIDE_DIST, 1.42))
 	_main.add_child(root)
-	_panel(root, Vector2(1.55, 0.95), Palette.CYAN, 0.55)
-	_label(root, "KNOW YOUR BOTS", 64, GameFonts.display(), Palette.CYAN, Vector3(0.0, 0.36, 0.005))
+	_panel(root, Vector2(1.6, 0.95), Palette.CYAN, PANEL_ALPHA)
+	_label(root, "KNOW YOUR BOTS", 72, GameFonts.display(), Palette.CYAN, Vector3(0.0, 0.37, 0.005))
 	var kinds: Array[BotModel.Kind] = [BotModel.Kind.NORMAL, BotModel.Kind.GOLDEN, BotModel.Kind.ARMORED, BotModel.Kind.MEDIC, BotModel.Kind.BOMB]
 	var names: Array[String] = ["BOT\n+100", "GOLDEN\n+500 FAST!", "ARMORED\n2 HITS", "MEDIC\n+1 LIFE", "BOMB\nDON'T SHOOT"]
 	for i in kinds.size():
-		var x := (float(i) - 2.0) * 0.29
+		var x := (float(i) - 2.0) * 0.3
 		var bot := BotModel.new(kinds[i])
-		bot.scale = Vector3.ONE * 0.36
-		bot.position = Vector3(x, 0.05, 0.06)
+		bot.scale = Vector3.ONE * 0.44
+		bot.position = Vector3(x, 0.08, 0.06)
 		bot.rotation = Vector3(0.0, PI, 0.0)
 		root.add_child(bot)
 		_bestiary.append(bot)
 		var c := BotModel.eye_color_for(kinds[i])
-		var cap := _label(root, names[i], 34, GameFonts.body(), c.lightened(0.3), Vector3(x, -0.28, 0.005))
+		var cap := _label(root, names[i], 44, GameFonts.body(), c.lightened(0.3), Vector3(x, -0.3, 0.005))
 		cap.line_spacing = -4.0
 
 
 func _build_instructions() -> void:
 	var root := Node3D.new()
-	_face_player(root, _polar(SIDE_ANGLE, 2.6, 1.45))
+	_face_player(root, _polar(SIDE_ANGLE, SIDE_DIST, 1.42))
 	_main.add_child(root)
-	_panel(root, Vector2(1.55, 0.95), Palette.MAGENTA, 0.55)
-	_label(root, "HOW TO PLAY", 64, GameFonts.display(), Palette.MAGENTA, Vector3(0.0, 0.36, 0.005))
+	_panel(root, Vector2(1.6, 0.95), Palette.MAGENTA, PANEL_ALPHA)
+	_label(root, "HOW TO PLAY", 72, GameFonts.display(), Palette.MAGENTA, Vector3(0.0, 0.37, 0.005))
 	var text := "\n".join(PackedStringArray([
-		"•  Pull a TRIGGER to fire. Both hands have a blaster.",
-		"•  Zap bots before they duck back into their hatches.",
-		"•  Chain hits for a COMBO multiplier. Misses break it.",
-		"•  Arrows at the edge of your view and blips on the floor point to bots you can't see. Look behind you!",
+		"•  TRIGGER fires. You have a blaster in each hand.",
+		"•  Zap bots before they duck back in.",
+		"•  Hits in a row build a COMBO. Misses break it.",
+		"•  Arrows and floor blips point to bots you can't see. Look behind you!",
 		"•  Never shoot a BOMB.",
-		"•  MENU / B / Y button pauses.",
+		"•  MENU / B / Y pauses.",
 	]))
-	var body := _label(root, text, 34, GameFonts.body(), Color(0.95, 0.9, 1.0), Vector3(0.0, -0.07, 0.005))
+	var body := _label(root, text, 42, GameFonts.body(), Color(0.95, 0.9, 1.0), Vector3(0.0, -0.08, 0.005))
 	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.width = 1.4 / body.pixel_size
+	body.width = 1.48 / body.pixel_size
 	body.line_spacing = 2.0
 
 
@@ -162,13 +166,13 @@ func _build_results() -> void:
 	var root := Node3D.new()
 	_face_player(root, Vector3(0.0, 1.62, -BUTTON_DIST - 0.1))
 	_results.add_child(root)
-	_panel(root, Vector2(1.7, 1.0), Palette.CYAN, 0.7)
+	_panel(root, Vector2(1.7, 1.0), Palette.CYAN, 0.96)
 	_result_title = _label(root, "TIME UP!", 96, GameFonts.title(), Palette.CYAN, Vector3(0.0, 0.36, 0.005))
 	_result_score = _label(root, "0", 220, GameFonts.title(), Color.WHITE, Vector3(-0.12, 0.1, 0.005))
 	_result_score.outline_size = 30
 	_result_score.outline_modulate = Color(0.0, 0.6, 1.0, 0.6)
 	_result_best = _label(root, "", 52, GameFonts.display(), Palette.GOLD, Vector3(-0.12, -0.1, 0.005))
-	_result_stats = _label(root, "", 34, GameFonts.body(), Color(0.9, 0.9, 1.0), Vector3(0.0, -0.32, 0.005))
+	_result_stats = _label(root, "", 44, GameFonts.body(), Color(0.9, 0.9, 1.0), Vector3(0.0, -0.33, 0.005))
 	_result_rank = _label(root, "S", 300, GameFonts.title(), Palette.GOLD, Vector3(0.62, 0.06, 0.005))
 	_result_rank.outline_size = 40
 	var again := _button(_results, "PLAY AGAIN", "", Vector2(0.62, 0.17), Palette.GREEN, Vector3(-0.4, 0.92, -BUTTON_DIST + 0.15), 48)
@@ -181,7 +185,7 @@ func _build_pause() -> void:
 	var root := Node3D.new()
 	_face_player(root, Vector3(0.0, 1.55, -2.2))
 	_pause.add_child(root)
-	_panel(root, Vector2(1.1, 0.42), Palette.PURPLE, 0.75)
+	_panel(root, Vector2(1.1, 0.42), Palette.PURPLE, PANEL_ALPHA)
 	_label(root, "PAUSED", 120, GameFonts.title(), Color.WHITE, Vector3(0.0, 0.04, 0.005))
 	var resume := _button(_pause, "RESUME", "", Vector2(0.5, 0.17), Palette.GREEN, Vector3(-0.3, 1.1, -2.1), 48)
 	resume.pressed.connect(func(_b: Button3D) -> void: resume_requested.emit())

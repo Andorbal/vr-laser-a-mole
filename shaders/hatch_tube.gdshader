@@ -17,6 +17,6 @@ void fragment() {
 	ALBEDO = vec3(0.06, 0.06, 0.09) * (1.0 - rings * 0.5);
 	METALLIC = 0.7;
 	ROUGHNESS = 0.4;
-	float glow = pow(depth01, 3.0) * (0.25 + custom.r * 2.5);
+	float glow = pow(depth01, 3.0) * (0.1 + custom.r * 1.3);
 	EMISSION = COLOR.rgb * (glow + rings * 0.2 * custom.r * depth01);
 }

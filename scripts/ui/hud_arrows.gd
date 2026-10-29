@@ -7,8 +7,8 @@ extends Node3D
 
 const MAX_ARROWS := 12
 const DISTANCE := 1.2
-const RING_RADIUS := 0.4
-const VISIBLE_CONE := 0.4 ## Radians from view center where no arrow is needed.
+const RING_RADIUS := 0.55
+const VISIBLE_CONE := 0.7 ## Radians from view center where no arrow is needed.
 
 var bots: Array[Bot] = []
 var _arrows: Array[MeshInstance3D] = []

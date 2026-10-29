@@ -149,9 +149,8 @@ func end_run(title: String) -> void:
 	var new_best := Save.submit_score(mode.id, score)
 	var accuracy := 0 if shots == 0 else roundi(100.0 * float(shots_hit) / float(shots))
 	var whack_pct := 0 if spawned == 0 else roundi(100.0 * float(whacked) / float(spawned))
-	var stats := "WHACKED %d / %d  (%d%%)     ACCURACY %d%%     BEST COMBO %d" % [whacked, spawned, whack_pct, accuracy, best_streak]
+	var stats := "WHACKED %d / %d (%d%%)   ACCURACY %d%%   BEST COMBO %d" % [whacked, spawned, whack_pct, accuracy, best_streak]
 	menu.show_results(_player_yaw(), title, mode, score, new_best, stats)
-	announcer.announce(title, mode.color, 1.6)
 	Sfx.play(&"game_over", 1.0)
 	if new_best:
 		get_tree().create_timer(1.0).timeout.connect(func() -> void: Sfx.play(&"new_best", 1.0))

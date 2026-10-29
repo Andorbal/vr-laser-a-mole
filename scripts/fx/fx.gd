@@ -45,7 +45,7 @@ func _ready() -> void:
 	var debris_mat := Mat.shader_material("res://shaders/debris.gdshader", {"energy": 2.2})
 	var spark_mat := Mat.shader_material("res://shaders/debris.gdshader", {"energy": 6.0})
 	var glow_mat := Mat.shader_material("res://shaders/glow_sprite.gdshader", {"energy": 2.5, "sharpness": 3.5})
-	var shard := Mat.box(Vector3(0.06, 0.06, 0.03))
+	var shard := Mat.box(Vector3(0.08, 0.08, 0.04))
 	shard.material = debris_mat
 	var streak := Mat.box(Vector3(0.012, 0.11, 0.012))
 	streak.material = spark_mat
@@ -185,14 +185,14 @@ func _process(delta: float) -> void:
 		if b.age > 1.0:
 			continue
 		b.age += delta
-		var k := clampf(b.age / 0.28, 0.0, 1.0)
+		var k := clampf(b.age / 0.4, 0.0, 1.0)
 		if k >= 1.0:
 			b.flash.visible = false
 		else:
-			var s := (0.3 + 1.5 * k) * b.size
+			var s := (0.6 + 2.2 * sqrt(k)) * b.size
 			b.flash.scale = Vector3(s, s, s)
 			var c := b.color
-			c.a = (1.0 - k) * (1.0 - k)
+			c.a = 1.6 * pow(1.0 - k, 1.5)
 			b.flash.set_instance_shader_parameter("tint", c)
 		if b.light:
 			b.light.light_energy = maxf(0.0, 1.0 - b.age / 0.3) * 4.0 * b.size

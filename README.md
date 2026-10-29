@@ -7,6 +7,13 @@ synthwave sky. Cute screen-faced robots pop out of hatches all around you, in
 front, overhead and behind. Point, pull the trigger, and zap them before they
 duck back in.
 
+| | |
+| --- | --- |
+| ![Gameplay](docs/screenshots/gameplay.jpg) | ![Zap!](docs/screenshots/zap.jpg) |
+| ![Menu](docs/screenshots/menu.jpg) | ![An armored bot](docs/screenshots/bot.jpg) |
+
+*Screenshots are rendered by Godot 4.7.2 (Mobile renderer) in desktop mode.*
+
 ## Playing
 
 | Action | VR (Quest, Index, Vive, WMR, Pico…) | Desktop fallback (no headset) |
@@ -100,6 +107,27 @@ shield and the explosion lights to keep the frame rate up.
 | Colors | `scripts/palette.gd` and the shader uniforms in `shaders/` |
 | Lighting, fog, bloom, tonemapping | `scripts/world/world_builder.gd` |
 | Sounds and music | `tools/generate_audio.py`, then run `python3 tools/generate_audio.py` (needs numpy, and ffmpeg for the music) |
+
+## Automated tests
+
+`tests/smoke_test.tscn` plays through the whole game without a headset. It
+shoots the real menu buttons, plays Blitz, Survival and Zen with an
+auto-aiming player, and checks pause/resume. It exits with code 1 if anything
+fails or the engine logs an error:
+
+```sh
+godot --headless --path . --xr-mode off res://tests/smoke_test.tscn --fixed-fps 30
+```
+
+`tests/screenshots.tscn` renders a set of review screenshots (it needs a real
+renderer, so don't use `--headless`):
+
+```sh
+godot --path . --xr-mode off res://tests/screenshots.tscn --fixed-fps 30 -- --shots=/absolute/output/dir
+```
+
+When you set up an export preset, add `tests/*` to *Resources → Filters to
+exclude files* so the tests stay out of release builds.
 
 ## How it's built
 

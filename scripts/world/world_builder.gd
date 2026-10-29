@@ -33,13 +33,17 @@ static func build(root: Node3D) -> Dictionary:
 	top.rotation = Vector3(deg_to_rad(-70.0), deg_to_rad(160.0), 0.0)
 	root.add_child(top)
 
-	# Cool fill from behind the player so bots in front aren't only back-lit.
-	var fill := DirectionalLight3D.new()
-	fill.light_color = Color(0.55, 0.5, 1.0)
-	fill.light_energy = 0.45
-	fill.shadow_enabled = false
-	fill.rotation = Vector3(deg_to_rad(-25.0), 0.0, 0.0)
-	root.add_child(fill)
+	# Soft light at the player's head: bots always face the player, so this
+	# lights every bot's face evenly wherever it pops up.
+	var head_light := OmniLight3D.new()
+	head_light.position = Palette.HEAD_CENTER
+	head_light.light_color = Color(1.0, 0.9, 0.97)
+	head_light.light_energy = 1.4
+	head_light.omni_range = 9.0
+	head_light.omni_attenuation = 0.6
+	head_light.shadow_enabled = false
+	head_light.light_cull_mask = BotModel.BOT_LAYER
+	root.add_child(head_light)
 
 	var floor_mesh := PlaneMesh.new()
 	floor_mesh.size = Vector2(FLOOR_SIZE, FLOOR_SIZE)

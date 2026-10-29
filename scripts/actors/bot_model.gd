@@ -16,7 +16,11 @@ const FACE_HEARTS := 6
 const FACE_SURPRISED := 7
 
 const HEAD_RADIUS := 0.3
+const BOT_LAYER := 2 ## Render layer bit lit by the head light (see WorldBuilder).
 const FACE_RADIUS := 0.23
+# The armor sits like a cap, tilted back so the eyes stay visible.
+const HELMET_POS := Vector3(0.0, 0.1, 0.05)
+const HELMET_ROT := Vector3(0.3, 0.0, 0.0)
 
 static var _shared: Dictionary = {}
 
@@ -91,7 +95,7 @@ static func _res(key: String) -> Resource:
 
 
 static func _helmet_mesh() -> SphereMesh:
-	var m := Mat.sphere(HEAD_RADIUS + 0.035, 0.26, 32, 10)
+	var m := Mat.sphere(HEAD_RADIUS + 0.02, 0.22, 32, 10)
 	m.is_hemisphere = true
 	return m
 
@@ -112,13 +116,22 @@ func _build() -> void:
 		var ring := Mat.add_mesh(head, _res("ear_ring"), null, Vector3(float(side) * (HEAD_RADIUS + 0.03), 0.02, 0.02))
 		ring.rotation = Vector3(0.0, 0.0, PI * 0.5)
 		_ear_rings.append(ring)
-	helmet = Mat.add_mesh(head, _res("helmet"), _res("helmet_mat"), Vector3(0.0, 0.03, 0.0))
-	helmet.rotation = Vector3(deg_to_rad(-12.0), 0.0, 0.0)
+	helmet = Mat.add_mesh(head, _res("helmet"), _res("helmet_mat"), HELMET_POS)
+	helmet.rotation = HELMET_ROT
 
 	var collar := Mat.add_mesh(self, _res("collar"), _res("metal_mat"), Vector3(0.0, -0.05, 0.24))
 	collar.rotation = Vector3(PI * 0.5, 0.0, 0.0)
 	var body := Mat.add_mesh(self, _res("body"), _res("body_mat"), Vector3(0.0, -0.05, 0.6))
 	body.rotation = Vector3(-PI * 0.5, 0.0, 0.0)
+	_put_on_bot_layer(self)
+
+
+## Bots also live on render layer 2, the only layer the player's head light touches.
+static func _put_on_bot_layer(node: Node) -> void:
+	for child in node.get_children():
+		if child is VisualInstance3D:
+			(child as VisualInstance3D).layers = 1 | BOT_LAYER
+		_put_on_bot_layer(child)
 
 
 func set_kind(k: Kind) -> void:
@@ -140,8 +153,8 @@ func reset_helmet() -> void:
 	if _helmet_tween:
 		_helmet_tween.kill()
 	helmet.visible = kind == Kind.ARMORED
-	helmet.position = Vector3(0.0, 0.03, 0.0)
-	helmet.rotation = Vector3(deg_to_rad(-12.0), 0.0, 0.0)
+	helmet.position = HELMET_POS
+	helmet.rotation = HELMET_ROT
 	helmet.scale = Vector3.ONE
 
 

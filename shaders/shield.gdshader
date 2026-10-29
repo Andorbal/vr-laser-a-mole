@@ -7,7 +7,7 @@ render_mode unshaded, blend_add, depth_draw_never, cull_front, shadows_disabled,
 
 uniform vec3 color : source_color = vec3(0.3, 0.45, 1.0);
 uniform vec3 impact_color : source_color = vec3(1.0, 0.35, 0.9);
-uniform float line_alpha = 0.07;
+uniform float line_alpha = 0.05;
 uniform float hex_count = 42.0;
 uniform float boost = 0.0;
 uniform float now = 0.0;

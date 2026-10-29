@@ -183,6 +183,9 @@ func _process(delta: float) -> void:
 
 	if controller:
 		var v := controller.get_float(&"trigger")
+		# Some controller profiles only report a trigger click, not an analog value.
+		if controller.is_button_pressed(&"trigger_click"):
+			v = maxf(v, 1.0)
 		if not _trigger_down and v > TRIGGER_ON:
 			_trigger_down = true
 			fire()

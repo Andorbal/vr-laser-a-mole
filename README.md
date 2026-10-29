@@ -80,8 +80,9 @@ appeared, accuracy, and your best combo. Best scores are saved per mode.
    * Press **F5** in Godot. The game runs in the headset and mirrors to the
      game window.
 5. **Other PC headsets** (Index, Vive, WMR, Pico Link) work through SteamVR or
-   their own OpenXR runtime. Godot's default OpenXR action map already binds
-   the trigger, menu and B/Y actions for all of the common controllers.
+   their own OpenXR runtime. `openxr_action_map.tres` binds Oculus Touch,
+   Pico 4, the KHR generic controller and hand interaction (Godot's defaults),
+   plus the KHR simple controller that every runtime supports as a fallback.
 
 ### Standalone Quest build (for later)
 
@@ -124,6 +125,16 @@ renderer, so don't use `--headless`):
 
 ```sh
 godot --path . --xr-mode off res://tests/screenshots.tscn --fixed-fps 30 -- --shots=/absolute/output/dir
+```
+
+`tests/xr_check.tscn` runs the game through whatever OpenXR runtime is active
+and reports whether the XR session, head camera and both controllers came up.
+With `-- --shots=/dir` it also saves a mirror of the head view. It was verified
+with Monado's simulated headset on Linux:
+
+```sh
+XRT_COMPOSITOR_NULL=1 SIMULATED_ENABLE=1 SIMULATED_LEFT=simple SIMULATED_RIGHT=simple monado-service &
+godot --path . res://tests/xr_check.tscn
 ```
 
 When you set up an export preset, add `tests/*` to *Resources → Filters to
